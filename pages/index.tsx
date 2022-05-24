@@ -1,9 +1,40 @@
+import { Button, Heading, HStack, Input, Stack, Grid, Flex, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useState } from 'react'
 import styles from '../styles/Home.module.css'
+import { libCep } from './api/libCep'
+
+interface DataProps {
+  bairro: string,
+  cep: string,
+  complemento: string,
+  ddd: string,
+  gia: string,
+  ibge: string,
+  localidade: string,
+  logradouro: string,
+  siafi: string,
+  uf: string, 
+}
 
 const Home: NextPage = () => {
+
+  const [ value, setValue ] = useState<string>("");
+  const [ data, setData ] = useState<DataProps>();
+
+  async function main() {
+    try {
+      const response = await libCep.getAddress(value);
+      setData(response)
+      console.log(response)
+    }
+    catch(err: any){
+      console.log(err.message)
+    }
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,44 +44,169 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
+        <Stack spacing="2rem" justify="center" alignItems="center">
+          <Heading
+            bgGradient='linear(to-l, #7928CA, #FF0080)'
+            bgClip='text'
+            fontSize='6xl'
           >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+            ViaCEP
+          </Heading>
+          <HStack>
+            <Input
+              type="text" 
+              value={value}
+              onChange={(e: any) => setValue(e.target.value)}
+            />
+            <Button
+              onClick={() => main()}
+            >
+              Buscar
+            </Button>
+          </HStack>
+          {data && (
+            <Grid
+              templateColumns="repeat(4, 1fr)"
+              gap="1rem"
+              w="600px"
+              bgColor="gray.100"
+              padding="20px"
+              borderRadius="5px"
+              textAlign="center"
+            >
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  bairro
+                </Heading>
+                <Text>
+                  {data?.bairro} 
+                </Text>
+              </Stack>
 
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  cep
+                </Heading>
+                <Text>
+                  {data?.cep} 
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  complemento
+                </Heading>
+                <Text>
+                  {data?.complemento} 
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  ddd
+                </Heading>
+                <Text>
+                  {data?.ddd} 
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  gia
+                </Heading>
+                <Text>
+                  {data?.gia} 
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  ibge
+                </Heading>
+                <Text>
+                  {data?.ibge} 
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  localidade
+                </Heading>
+                <Text>
+                  {data?.localidade} 
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  logradouro
+                </Heading>
+                <Text>
+                  {data?.logradouro} 
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  siafi
+                </Heading>
+                <Text>
+                  {data?.siafi} 
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Heading
+                  fontSize="1rem"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  uf
+                </Heading>
+                <Text>
+                  {data?.uf} 
+                </Text>
+              </Stack>
+
+            </Grid>
+          )}
+        </Stack>
       </main>
 
       <footer className={styles.footer}>
